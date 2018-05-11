@@ -3,6 +3,7 @@
 #include <wiringPi.h>
 #include "pin_config.h"
 #include "Pi_out_pin.h"
+#include "IOManager.h"
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -10,6 +11,7 @@
 #include <random>
 #include <thread>
 #include <limits>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono_literals;
@@ -37,6 +39,20 @@ void Reaction_game::play()
 	cin >> number_of_rounds;
 
 	cout << "Game starts now!" << endl;
+
+	IO_Manager io_manager;
+	assert(!io_manager.is_reserved(PLAYER1_LED));
+	io_manager.reserve(PLAYER1_LED);
+	assert(!io_manager.is_reserved(PLAYER2_LED));
+	io_manager.reserve(PLAYER2_LED);
+	assert(!io_manager.is_reserved(REACTION_LED));
+	io_manager.reserve(REACTION_LED);
+	assert(!io_manager.is_reserved(START_ROUND_LED));
+	io_manager.reserve(START_ROUND_LED);
+	assert(!io_manager.is_reserved(PLAYER1_BUTTON));
+	io_manager.reserve(PLAYER1_BUTTON);
+	assert(!io_manager.is_reserved(PLAYER2_BUTTON));
+	io_manager.reserve(PLAYER2_BUTTON);
 
 	for (int current_round = 1; current_round <= number_of_rounds; ++current_round)
 	{

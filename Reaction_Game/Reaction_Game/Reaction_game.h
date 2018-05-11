@@ -11,7 +11,7 @@ public:
 	void play();
 
 private:
-	Result play_round(Player player1, Player player2);
+	Result play_round(Player, Player);
 	static void disable_ISR();
 	static void player1_button_ISR();
 	static void player2_button_ISR();
