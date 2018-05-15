@@ -11,7 +11,9 @@ public:
 	void play();
 
 private:
-	Result play_round();
+	using duration = std::chrono::duration<double>;
+
+	Result play_round() const;
 
 	void read_players();
 	void show_results() const;
@@ -24,9 +26,10 @@ private:
 	static void player2_button_ISR();
 	static void blink(std::chrono::seconds, Result);
 	static void all_leds_off();
-	static std::chrono::duration<double> Reaction_game::random_wait_time();
+	static duration random_wait_time();
 	static void prepare_round();
 	static void on_early_reaction(const Player& player, Pi_out_pin player_led);
+	void wait_for_reaction() const;
 
 	void handle_round_result(Result result);
 	static void on_timeout(Pi_out_pin player1_led, Pi_out_pin player2_led);
@@ -34,9 +37,9 @@ private:
 	void on_player1_wins(Pi_out_pin player1_led, Pi_out_pin player2_led) const;
 	void on_player2_wins(Pi_out_pin player1_led, Pi_out_pin player2_led) const;
 
-	static int64_t start_time_ms_;
-	static int player1_reaction_time_;
-	static int player2_reaction_time_;
+	static long long int start_time_ms_;
+	static long long int player1_reaction_time_;
+	static long long int player2_reaction_time_;
 	static bool player1_button_pressed_;
 	static bool player2_button_pressed_;
 

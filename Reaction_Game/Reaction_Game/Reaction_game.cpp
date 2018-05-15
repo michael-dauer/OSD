@@ -22,9 +22,9 @@ constexpr auto time_blink = 5s;
 constexpr auto min_wait_time = 5.0;
 constexpr auto max_wait_time = 10.0;
 
-int64_t Reaction_game::start_time_ms_ = 0;
-int Reaction_game::player1_reaction_time_ = 0;
-int Reaction_game::player2_reaction_time_ = 0;
+long long int Reaction_game::start_time_ms_ = 0;
+long long int Reaction_game::player1_reaction_time_ = 0;
+long long int Reaction_game::player2_reaction_time_ = 0;
 bool Reaction_game::player1_button_pressed_ = false;
 bool Reaction_game::player2_button_pressed_ = false;
 constexpr auto NAP = 10ms;
@@ -161,12 +161,12 @@ void Reaction_game::on_player2_wins(Pi_out_pin player1_led, Pi_out_pin player2_l
 	all_leds_off();
 }
 
-chrono::duration<double> Reaction_game::random_wait_time()
+Reaction_game::duration Reaction_game::random_wait_time()
 {
 	const unsigned int seed = time(nullptr);
 	mt19937_64 random_number_generator(seed);
 	uniform_real_distribution<double> uniform(min_wait_time, max_wait_time);
-	return chrono::duration<double>(uniform(random_number_generator));
+	return duration(uniform(random_number_generator));
 }
 
 void Reaction_game::prepare_round()
@@ -188,10 +188,23 @@ void Reaction_game::on_early_reaction(const Player& player, Pi_out_pin player_le
 	all_leds_off();
 }
 
-Reaction_game::Result Reaction_game::play_round()
+void Reaction_game::wait_for_reaction() const
 {
-	Pi_out_pin player1_led(PLAYER1_LED, false);
-	Pi_out_pin player2_led(PLAYER2_LED, false);
+	const auto now = chrono::system_clock::now().time_since_epoch();
+	start_time_ms_ = std::chrono::duration_cast<chrono::milliseconds>(now).count();
+	const auto reaction_end = chrono::system_clock::now() + time_end;
+	while (!player1_button_pressed_ && !player2_button_pressed_ && !(chrono::system_clock::now() > reaction_end))
+		this_thread::sleep_for(NAP);
+
+	// ignore all further button interrupts
+	wiringPiISR(PLAYER1_BUTTON, INT_EDGE_FALLING, &disable_ISR);
+	wiringPiISR(PLAYER2_BUTTON, INT_EDGE_FALLING, &disable_ISR);
+}
+
+Reaction_game::Result Reaction_game::play_round() const
+{
+	const Pi_out_pin player1_led(PLAYER1_LED, false);
+	const Pi_out_pin player2_led(PLAYER2_LED, false);
 	Pi_out_pin reaction_led(REACTION_LED, false);
 	Pi_out_pin start_round_led(START_ROUND_LED, false);
 
@@ -219,16 +232,9 @@ Reaction_game::Result Reaction_game::play_round()
 		return Result::player1;
 	}
 
-	const auto now = chrono::system_clock::now().time_since_epoch();
-	start_time_ms_ = chrono::duration_cast<chrono::milliseconds>(now).count();
-
 	reaction_led.set(true);
-	const auto reaction_end = chrono::system_clock::now() + time_end;
-	while (!player1_button_pressed_ && !player2_button_pressed_ && !(chrono::system_clock::now() > reaction_end))
-		this_thread::sleep_for(NAP);
 
-	wiringPiISR(PLAYER1_BUTTON, INT_EDGE_FALLING, &disable_ISR);
-	wiringPiISR(PLAYER2_BUTTON, INT_EDGE_FALLING, &disable_ISR);
+	wait_for_reaction();
 
 	if (player1_button_pressed_ || player2_button_pressed_)
 	{
@@ -257,14 +263,14 @@ void Reaction_game::disable_ISR()
 
 void Reaction_game::player1_button_ISR()
 {
-	auto now = chrono::system_clock::now().time_since_epoch();
+	const auto now = chrono::system_clock::now().time_since_epoch();
 	player1_reaction_time_ = chrono::duration_cast<chrono::milliseconds>(now).count() - start_time_ms_;
 	player1_button_pressed_ = true;
 }
 
 void Reaction_game::player2_button_ISR()
 {
-	auto now = chrono::system_clock::now().time_since_epoch();
+	const auto now = chrono::system_clock::now().time_since_epoch();
 	player2_reaction_time_ = chrono::duration_cast<chrono::milliseconds>(now).count() - start_time_ms_;
 	player2_button_pressed_ = true;
 }
@@ -277,7 +283,7 @@ void Reaction_game::blink(chrono::seconds blink_time, Result result)
 	Pi_out_pin player1_led(PLAYER1_LED, false);
 	Pi_out_pin player2_led(PLAYER2_LED, false);
 
-	auto end = chrono::system_clock::now() + blink_time;
+	const auto end = chrono::system_clock::now() + blink_time;
 	while (chrono::system_clock::now() <= end)
 	{
 		if (result == Result::player1 || result == Result::draw)
