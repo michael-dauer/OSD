@@ -30,7 +30,3 @@ void Player::reset_points(void)
 Player::Player(string name) : name_(name), points_(0.0f)
 {
 }
-
-Player::~Player()
-{
-}

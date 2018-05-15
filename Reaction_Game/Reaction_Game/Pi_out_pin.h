@@ -10,5 +10,5 @@ public:
 	Pi_out_pin(int pinNr, bool value);		//constructor with parameters: pinnumber (pinNr) and output value (value)
 
 private:
-	int pinNr_;
+	int pin_nr_;
 };

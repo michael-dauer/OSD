@@ -22,17 +22,16 @@ constexpr auto TIME_BLINK = 5s;
 constexpr auto MIN_WAIT_TIME = 5.0;
 constexpr auto MAX_WAIT_TIME = 10.0;
 
+int64_t Reaction_game::start_time_ms_ = 0;
+int Reaction_game::player1_reaction_time_ = 0;
+int Reaction_game::player2_reaction_time_ = 0;
+bool Reaction_game::player1_button_pressed_ = false;
+bool Reaction_game::player2_button_pressed_ = false;
+constexpr auto NAP = 10ms;
+
 void Reaction_game::play()
 {
-	string name = "John Doe";
-	cout << "Player 1, please enter your name!" << endl;
-	cin >> name;
-	Player player1(name);
-
-	name = "Jane Doe";
-	cout << "Player 2, please enter your name!" << endl;
-	cin >> name;
-	Player player2(name);
+	read_players();
 
 	int number_of_rounds = 1;
 	cout << "Enter the maximum number of rounds!" << endl;
@@ -58,34 +57,34 @@ void Reaction_game::play()
 	{
 		cout << "Round " << current_round << " starts as soon as you see the BLUE light!" << endl;
 	
-		Result result = play_round(player1, player2);
+		Result result = play_round();
 		switch (result)
 		{
 		case Result::player1:
-			player1.add_win();
+			player1_.add_win();
 			break;
 		case Result::player2:
-			player2.add_win();
+			player2_.add_win();
 			break;
 		case Result::draw:
-			player2.add_draw();
-			player1.add_draw();
+			player2_.add_draw();
+			player1_.add_draw();
 			break;
 		case Result::timeout:
 			break;
 		}
 	}
-	cout << player1.get_name() << " has " << player1.get_points() << " points." << endl;
-	cout << player2.get_name() << " has " << player2.get_points() << " points." << endl;
+	cout << player1_.get_name() << " has " << player1_.get_points() << " points." << endl;
+	cout << player2_.get_name() << " has " << player2_.get_points() << " points." << endl;
 
-	if (player1.get_points() > player2.get_points())
+	if (player1_.get_points() > player2_.get_points())
 	{
-		cout << player1.get_name() << " takes it all!! " << endl;
+		cout << player1_.get_name() << " takes it all!! " << endl;
 		blink(TIME_BLINK, Result::player1);
 	}
-	else if (player1.get_points() < player2.get_points())
+	else if (player1_.get_points() < player2_.get_points())
 	{
-		cout << player2.get_name() << " takes it all!! " << endl;
+		cout << player2_.get_name() << " takes it all!! " << endl;
 		blink(TIME_BLINK, Result::player2);
 	}
 	else
@@ -95,15 +94,20 @@ void Reaction_game::play()
 	}
 }
 
+void Reaction_game::read_players()
+{
+	string name = "John Doe";
+	cout << "Player 1, please enter your name!" << endl;
+	cin >> name;
+	player1_ = name;
 
-int64_t Reaction_game::start_time_ms_ = 0;
-int Reaction_game::player1_reaction_time_ = 0;
-int Reaction_game::player2_reaction_time_ = 0;
-bool Reaction_game::player1_button_pressed_ = false;
-bool Reaction_game::player2_button_pressed_ = false;
-constexpr auto NAP = 10ms;
+	name = "Jane Doe";
+	cout << "Player 2, please enter your name!" << endl;
+	cin >> name;
+	player2_ = name;
+}
 
-Reaction_game::Result Reaction_game::play_round(Player player1, Player player2)
+Reaction_game::Result Reaction_game::play_round()
 {
 	const unsigned int seed = time(NULL);
 	mt19937_64 random_number_generator(seed);
@@ -133,7 +137,7 @@ Reaction_game::Result Reaction_game::play_round(Player player1, Player player2)
 
 	if (player1_button_pressed_)
 	{
-		cout << player1.get_name() << " you are way too nervous, DORK! " << endl;
+		cout << player1_.get_name() << " you are way too nervous, DORK! " << endl;
 
 		player1_led.set(true);
 		this_thread::sleep_for(TIME_END);
@@ -142,7 +146,7 @@ Reaction_game::Result Reaction_game::play_round(Player player1, Player player2)
 	}
 	else if (player2_button_pressed_)
 	{
-		cout << player2.get_name() << " you are way too nervous, DORK! " << endl;
+		cout << player2_.get_name() << " you are way too nervous, DORK! " << endl;
 		player2_led.set(true);
 		this_thread::sleep_for(TIME_END);
 		all_leds_off();
@@ -163,7 +167,7 @@ Reaction_game::Result Reaction_game::play_round(Player player1, Player player2)
 	{
 		if (player1_reaction_time_ > player2_reaction_time_)
 		{
-			cout << player1.get_name() << " you LOOSER! " << endl;
+			cout << player1_.get_name() << " you LOOSER! " << endl;
 			cout << "Come on, " << player2_reaction_time_ << " ms are to beat! " << endl;
 			player1_led.set(false);
 			player2_led.set(true);
@@ -173,7 +177,7 @@ Reaction_game::Result Reaction_game::play_round(Player player1, Player player2)
 		}
 		else if (player2_reaction_time_ > player1_reaction_time_)
 		{
-			cout << player2.get_name() << " you LOOSER! " << endl;
+			cout << player2_.get_name() << " you LOOSER! " << endl;
 			cout << "Come on, " << player1_reaction_time_ << " ms are to beat! " << endl;
 			player1_led.set(true);
 			player2_led.set(false);

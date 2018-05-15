@@ -1,6 +1,5 @@
 #pragma once
 #include"Player.h"
-#include <string>
 #include <chrono>
 
 class Reaction_game
@@ -8,10 +7,11 @@ class Reaction_game
 public:
 	enum class Result { player1, player2, draw, timeout };
 
+	void read_players();
 	void play();
 
 private:
-	Result play_round(Player, Player);
+	Result play_round();
 	static void disable_ISR();
 	static void player1_button_ISR();
 	static void player2_button_ISR();
@@ -23,5 +23,8 @@ private:
 	static int player2_reaction_time_;
 	static bool player1_button_pressed_;
 	static bool player2_button_pressed_;
+
+	Player player1_;
+	Player player2_;
 };
 

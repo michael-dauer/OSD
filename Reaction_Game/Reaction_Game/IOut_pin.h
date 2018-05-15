@@ -10,6 +10,6 @@ public:
 
 	virtual bool state() const = 0;		//gets current value of the pin
 
-	virtual ~IOut_pin() = 0;				//virtual deconstructor
+	virtual ~IOut_pin() = 0;				//virtual destructor
 };
 

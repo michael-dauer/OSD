@@ -11,8 +11,7 @@ public:
 	void reset_points(void);
 
 	Player(std::string name);
-	~Player();
-
+	
 private:
 	std::string name_;
 	float points_;
