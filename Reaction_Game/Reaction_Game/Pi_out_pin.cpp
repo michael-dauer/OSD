@@ -1,5 +1,5 @@
 #include "Pi_out_pin.h"
-#include <wiringPi.h>
+#include "piproxy.h"
 
 //the function set(bool value) gets a boolian value und sets the state of the pin (variable state_)
 void Pi_out_pin::set(bool value)

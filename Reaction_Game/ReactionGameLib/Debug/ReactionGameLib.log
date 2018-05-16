@@ -1,0 +1,13 @@
+﻿  IOManager.cpp
+  IOut_pin.cpp
+  Pi_out_pin.cpp
+  Player.cpp
+  Reaction_game.cpp
+c:\users\glawisch16\source\repos\osd2\reaction_game\reaction_game\reaction_game.cpp(108): warning C4244: "Initialisierung": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
+c:\users\glawisch16\source\repos\osd2\reaction_game\reaction_game\reaction_game.cpp(108): warning C4244: "Initialisierung": Konvertierung von "time_t" in "const unsigned int", möglicher Datenverlust
+c:\users\glawisch16\source\repos\osd2\reaction_game\reaction_game\reaction_game.cpp(212): warning C4244: "=": Konvertierung von "int64_t" in "int", möglicher Datenverlust
+c:\users\glawisch16\source\repos\osd2\reaction_game\reaction_game\reaction_game.cpp(219): warning C4244: "=": Konvertierung von "int64_t" in "int", möglicher Datenverlust
+  winpi.cpp
+  WinpiEmulator.cpp
+  Code wird generiert...
+  ReactionGameLib.vcxproj -> C:\Users\glawisch16\Source\Repos\OSD2\Reaction_Game\Debug\ReactionGameLib.lib

@@ -62,6 +62,7 @@
     <ClInclude Include="IOManager.h" />
     <ClInclude Include="IOut_pin.h" />
     <ClInclude Include="pin_config.h" />
+    <ClInclude Include="piproxy.h" />
     <ClInclude Include="Pi_out_pin.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Reaction_game.h" />

@@ -1,6 +1,6 @@
 #include "Reaction_game.h"
 #include "Player.h"
-#include <wiringPi.h>
+#include "piproxy.h"
 #include "pin_config.h"
 #include "Pi_out_pin.h"
 #include "IOManager.h"

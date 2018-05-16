@@ -1,1 +1,17 @@
 ﻿  Cleaning remote project directory
+  Validating architecture
+  Validating sources
+  Copying sources remotely to 'realtimepi.local'
+  Starting remote build
+  Compiling sources:
+  IOManager.cpp
+  IOut_pin.cpp
+  main.cpp
+  Pi_out_pin.cpp
+  Player.cpp
+  Reaction_game.cpp
+C:\Users\glawisch16\source\repos\OSD2\Reaction_Game\Reaction_Game\Reaction_game.cpp(212,84): warning : conversion to ‘int’ from ‘std::chrono::duration<long long int, std::ratio<1ll, 1000ll> >::rep {aka long long int}’ may alter its value [-Wconversion]
+C:\Users\glawisch16\source\repos\OSD2\Reaction_Game\Reaction_Game\Reaction_game.cpp(219,84): warning : conversion to ‘int’ from ‘std::chrono::duration<long long int, std::ratio<1ll, 1000ll> >::rep {aka long long int}’ may alter its value [-Wconversion]
+  Linking objects
+  Reaction_Game.vcxproj -> C:\Users\glawisch16\source\repos\OSD2\Reaction_Game\Reaction_Game\bin\ARM\Debug\Reaction_Game.out
+  Invoking 'gpio export 17 out', working directory: '/home/pi/projects/Reaction_Game'
