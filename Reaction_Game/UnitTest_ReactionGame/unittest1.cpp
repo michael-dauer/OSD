@@ -21,8 +21,13 @@ namespace UnitTest_ReactionGame
 		{
 			Player p{ "Michael" };
 			p.add_win();
+			Assert::AreEqual(1.0f, p.get_points(), 1E-6f);
 			p.add_draw();
 			Assert::AreEqual(1.5f, p.get_points(), 1E-6f);
+			p.add_draw();
+			Assert::AreEqual(2.0f, p.get_points(), 1E-6f);
+			p.add_win();
+			Assert::AreEqual(3.0f, p.get_points(), 1E-6f);
 		}
 
 		TEST_METHOD(Test_Reset_Points)
@@ -30,6 +35,7 @@ namespace UnitTest_ReactionGame
 			Player p{ "Jane Doe" };
 			p.add_win();
 			p.add_draw();
+			Assert::AreEqual(1.5f, p.get_points(), 1E-6f);
 			p.reset_points();
 			Assert::AreEqual(0.0f, p.get_points(), 1E-6f);
 		}
@@ -38,7 +44,9 @@ namespace UnitTest_ReactionGame
 		{
 			Player p{ "John Doe" };
 			p.add_win();
+			Assert::AreEqual(1.0f, p.get_points(), 1E-6f);
 			p.reset_points();
+			Assert::AreEqual(0.0f, p.get_points(), 1E-6f);
 			p.add_draw();
 			Assert::AreEqual(0.5f, p.get_points(), 1E-6f);
 		}
